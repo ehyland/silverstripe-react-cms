@@ -8,3 +8,10 @@
 # Install
 1. `composer install`
 2.  In a web browser, navigate to `dev/build/?flush=all`
+
+# API endpoints
+* api/data - site data
+* api/ - page data
+
+Add pageURL as a get variable to fetch page data. 
+For example: *api/?pageURL=about-me* will return data for the about-me page
