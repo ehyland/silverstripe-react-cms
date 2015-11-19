@@ -1,5 +1,5 @@
 # Summary
-CMS for my [portfolio web app](https://github.com/ehyland/eamon-app).
+[SilverStripe](https://www.silverstripe.org/) based CMS for my [portfolio web app](https://github.com/ehyland/eamon-app).
 
 # Dependencies
 - [composer](https://getcomposer.org/)
