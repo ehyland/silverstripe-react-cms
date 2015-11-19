@@ -1,0 +1,22 @@
+# Misc
+/*.zip
+/*.log
+assets/*
+!assets/.htaccess
+tools/phing-metadata
+.buildpath
+.project
+.settings
+.idea
+.DS_Store
+
+# Private
+_ss_environment.php
+silverstripe-cache
+
+# Packages
+vendor/
+cms/
+framework/
+siteconfig/
+reports/
