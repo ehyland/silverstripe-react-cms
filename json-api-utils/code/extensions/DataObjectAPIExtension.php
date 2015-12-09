@@ -53,7 +53,7 @@ class DataObjectAPIExtension extends Extension {
         );
 
         // Removed fields in $toExclude
-        $fieldNames = array_diff_key($fieldNames, array_flip($toExclude));
+        $fieldNames = array_diff($fieldNames, $toExclude);
 
         return $obj->getFieldsForAPI($fieldNames);
     }
@@ -65,7 +65,7 @@ class DataObjectAPIExtension extends Extension {
         $obj = $this->owner;
 
         // Remove sensitive fields
-        $fieldNames = array_diff_key($fieldNames, array_flip(self::$always_exclude));
+        $fieldNames = array_diff($fieldNames, self::$always_exclude);
 
         $fields = array();
 
@@ -88,12 +88,12 @@ class DataObjectAPIExtension extends Extension {
 
             // Is single Object?
             elseif (array_key_exists($fieldName, $singular)) {
-                $fields[$fieldName] = $obj->getObjectForAPI($fieldName, $singular[$fieldName]);
+                $fields[$fieldName] = $obj->getObjectForAPI($obj->$fieldName(), $singular[$fieldName]);
             }
 
             // Is collection of objects?
             elseif (array_key_exists($fieldName, $collection)) {
-                $fields[$fieldName] = $obj->getObjectCollectionForAPI($fieldName, $db[$fieldName]);
+                $fields[$fieldName] = $obj->getObjectCollectionForAPI($fieldName, $collection[$fieldName]);
             }
 
             // TODO: Is a custom getters?
@@ -143,12 +143,12 @@ class DataObjectAPIExtension extends Extension {
         return $value;
     }
 
-    public function getObjectForAPI ($fieldName, $dataType) {
-        $fieldObj = $this->owner->$fieldName();
+    public function getObjectForAPI ($fieldObj, $dataType) {
 
         if ($fieldObj && !$fieldObj->ID) {
             return null;
         }
+
         elseif (is_a($fieldObj, 'Image')) {
             return array(
                 'type' => $fieldObj->getFileType(),
@@ -178,15 +178,16 @@ class DataObjectAPIExtension extends Extension {
         }
 
         else {
-            return $this->owner->$fieldName()->forApi();
+            return $fieldObj->forApi();
         }
 
     }
 
-    public function getObjectCollectionForAPI ($fieldNames, $dataType) {
+    public function getObjectCollectionForAPI ($fieldName, $dataType) {
         $data = array();
-        foreach ($fieldNames as $fieldName => $dataType) {
-            $data[] = $this->owner->getObjectForAPI($fieldName, $dataType);
+        $fieldObjs = $this->owner->$fieldName();
+        foreach ($fieldObjs as $fieldObj) {
+            $data[] = $this->owner->getObjectForAPI($fieldObj, $dataType);
         }
         return $data;
     }
