@@ -1,7 +1,24 @@
 <?php
+/**
+ * Usage:
+ *
+ * $dataObject->getAllFieldsExcludingAPI(array('ID', 'ClassName'));
+ * // ['Title'=>'Some Object', ... 'Created'=>'2015-11-04T00:32:31+11:00']
+ *
+ *
+ * $dataObject->getFieldsForAPI(array('ID', 'ParentID' 'MenuTitle'));
+ * // ['ID'=>3, 'ParentID'=>0, 'MenuTitle'=>'Out Company']
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 class DataObjectAPIExtension extends Extension {
 
-    private static $data_transforms = array(
+    private static $db_field_transforms = array(
         'int' => '/^(Int|ForeignKey)$/',
         'float' => '/^((Float|Double|Decimal|Currency|Percentage)(\(.+\))?)$/',
         'string' => '/^((Varchar)(\(.+\))?)$/',
@@ -13,6 +30,9 @@ class DataObjectAPIExtension extends Extension {
         return $this->owner->getAllFieldsExcludingAPI();
     }
 
+    /**
+     * Get all fields excluding key names given in $toExclude
+     */
     public function getAllFieldsExcludingAPI ($toExclude = array()) {
         $obj = $this->owner;
 
@@ -25,11 +45,15 @@ class DataObjectAPIExtension extends Extension {
             // array_keys($obj->manyMany())
         );
 
-        // TODO: use $toExclude
+        // Removed fields in $toExclude
+        $fieldNames = array_diff_key($fieldNames, array_flip($toExclude));
 
         return $obj->getFieldsForAPI($fieldNames);
     }
 
+    /**
+     * Get only fields in $fieldNames
+     */
     public function getFieldsForAPI ($fieldNames) {
         $obj = $this->owner;
 
@@ -62,7 +86,7 @@ class DataObjectAPIExtension extends Extension {
                 $fields[$fieldName] = $obj->getObjectCollectionForAPI($fieldName, $db[$fieldName]);
             }
 
-            // TODO: Is a custom getter?
+            // TODO: Is a custom getters?
 
             else {
                 error_log('Field not found');
@@ -72,19 +96,20 @@ class DataObjectAPIExtension extends Extension {
         return $fields;
     }
 
+    /**
+     * Parse a DB field for API output
+     */
     public function getDBFieldForAPI ($fieldName, $dataType) {
         $obj = $this->owner;
         $type = 'raw';
         $value = null;
         // Loop tests
-        foreach (self::$data_transforms as $testType => $regex) {
+        foreach (self::$db_field_transforms as $testType => $regex) {
             if (preg_match($regex, $dataType)) {
                 $type = $testType;
                 break;
             }
         }
-
-        error_log($type);
 
         // Transform value
         switch ($type) {
