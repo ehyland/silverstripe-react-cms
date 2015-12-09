@@ -26,7 +26,7 @@ class PageAPIController extends Controller{
      */
     public function page(SS_HTTPRequest $request) {
         $url = $request->getVar('search_url');
-        $data = PageDataUtil::create()->getByLink($url);
+        $data = Cached_PageDataUtil::create()->getByLink($url);
         return $this->sendResponse($data);
     }
 

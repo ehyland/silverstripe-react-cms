@@ -17,3 +17,11 @@ if(defined('MY_SS_ERROR_LOG')) {
 i18n::set_locale('en_GB');
 
 CMSMenu::remove_menu_item('ReportAdmin');
+
+// Set cache life
+$devCacheLife = -1;
+$liveCacheLife = 60*5; // 5 min
+
+$cacheLife = Director::isDev() ? $devCacheLife : $liveCacheLife;
+
+SS_Cache::set_cache_lifetime(Cached_PageDataUtil::CACHE_NAME, $cacheLife, 100);
