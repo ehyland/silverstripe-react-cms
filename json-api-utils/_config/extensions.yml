@@ -1,0 +1,6 @@
+SiteTree:
+  extensions:
+    - 'PageAPIExtension'
+DataObject:
+  extensions:
+    - 'DataObjectAPIExtension'

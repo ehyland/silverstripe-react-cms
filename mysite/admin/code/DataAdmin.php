@@ -2,8 +2,8 @@
 
 class DataAdmin extends ModelAdmin{
   private static $managed_models = array(
-    'TechnologyExperience'
+    'Skill'
   );
   private static $url_segment = 'data';
-  private static $menu_title = 'My Data Admin';
+  private static $menu_title = 'Data';
 }

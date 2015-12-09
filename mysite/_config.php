@@ -14,6 +14,14 @@ if(defined('MY_SS_ERROR_LOG')) {
 }
 
 // Set the site locale
-i18n::set_locale('en_AU');
+i18n::set_locale('en_GB');
 
-date_default_timezone_set('Australia/Melbourne');
+CMSMenu::remove_menu_item('ReportAdmin');
+
+// Set cache life
+$devCacheLife = -1;
+$liveCacheLife = 60*5; // 5 min
+
+$cacheLife = Director::isDev() ? $devCacheLife : $liveCacheLife;
+
+SS_Cache::set_cache_lifetime(Cached_PageDataUtil::CACHE_NAME, $cacheLife, 100);
