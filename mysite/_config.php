@@ -14,6 +14,6 @@ if(defined('MY_SS_ERROR_LOG')) {
 }
 
 // Set the site locale
-i18n::set_locale('en_AU');
+i18n::set_locale('en_GB');
 
-date_default_timezone_set('Australia/Melbourne');
+CMSMenu::remove_menu_item('ReportAdmin');
