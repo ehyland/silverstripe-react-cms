@@ -1,5 +1,5 @@
 <?php
-class ReactAPIController extends Controller{
+class PageAPIController extends Controller{
 
     const PAGE_CACHE_NAME = 'API_PAGE_CAHCE';
     const SITE_DATA_CACHE_NAME = 'API_SITE_DATA_CAHCE';

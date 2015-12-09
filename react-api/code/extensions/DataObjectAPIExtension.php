@@ -9,10 +9,10 @@
  * $dataObject->getFieldsForAPI(array('ID', 'ParentID' 'MenuTitle'));
  * // ['ID'=>3, 'ParentID'=>0, 'MenuTitle'=>'Out Company']
  *
- *
- *
- *
- *
+ * Recommented Usage:
+ * Define forAPI() on each subclass of DataObject.
+ * In custom forAPI methods make calls to getFieldsForAPI explicitly defining
+ * desired fields
  *
  */
 
@@ -24,6 +24,15 @@ class DataObjectAPIExtension extends Extension {
         'string' => '/^((Varchar)(\(.+\))?)$/',
         'date' => '/^((Date|SS_Datetime)(\(.+\))?)$/',
         'bool' => '/^(Boolean)$/'
+    );
+
+    // TODO: move this to yml config
+    private static $always_exclude = array(
+        'HasBrokenFile',
+        'HasBrokenLink',
+        'ReportClass',
+        'CanViewType',
+        'CanEditType'
     );
 
     public function forAPI () {
@@ -40,9 +49,7 @@ class DataObjectAPIExtension extends Extension {
         $fieldNames = array_merge(
             array_keys($obj->allDatabaseFields()),
             array_keys($obj->hasOne()),
-            // array_keys($obj->belongsTo()),
             array_keys($obj->hasMany())
-            // array_keys($obj->manyMany())
         );
 
         // Removed fields in $toExclude
@@ -56,6 +63,9 @@ class DataObjectAPIExtension extends Extension {
      */
     public function getFieldsForAPI ($fieldNames) {
         $obj = $this->owner;
+
+        // Remove sensitive fields
+        $fieldNames = array_diff_key($fieldNames, array_flip(self::$always_exclude));
 
         $fields = array();
 

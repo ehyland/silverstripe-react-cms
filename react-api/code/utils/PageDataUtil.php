@@ -1,9 +1,9 @@
 <?php
+// TODO: Cache results
 class PageDataUtil extends Object {
 
     public function getByLink($url) {
-        error_log("Search for: {$url}");
-        
+
         if (!($page = Page::get_by_link($url))) {
             $page = ErrorPage::get()->filter('ErrorCode', 404)->first();
         }
